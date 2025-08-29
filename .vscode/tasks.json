@@ -173,6 +173,36 @@
 			"type": "shell",
 			"command": "git add .vscode/tasks.json",
 			"group": "build"
+		},
+		{
+			"label": "Commit final changes",
+			"type": "shell",
+			"command": "git add .gitignore && git commit -m \"chore: Update gitignore and add git tasks\n\n- Add dist/ and publish/ folders to gitignore\n- Add git-related tasks to VS Code tasks.json\"",
+			"group": "build"
+		},
+		{
+			"label": "Check commit history",
+			"type": "shell",
+			"command": "git log --oneline -5",
+			"group": "build"
+		},
+		{
+			"label": "Fix deprecated actions",
+			"type": "shell",
+			"command": "git add .github/workflows/deploy.yml && git commit -m \"fix: Update GitHub Actions to latest versions\n\n- Update actions/upload-pages-artifact from v2 to v3\n- Update actions/deploy-pages from v2 to v4\n- Resolves deprecated artifact action error\"",
+			"group": "build"
+		},
+		{
+			"label": "Trigger new deployment",
+			"type": "shell",
+			"command": "git add .github/workflows/deploy.yml && git commit -m \"docs: Add workflow description comment\n\nTrigger new deployment after configuring GitHub Pages settings\"",
+			"group": "build"
+		},
+		{
+			"label": "Add security enhancements",
+			"type": "shell",
+			"command": "git add . && git commit -m \"security: Add comprehensive security policy and hardening\n\n- Create detailed SECURITY.md with risk assessment and mitigation plans\n- Add Content Security Policy headers to index.html\n- Implement additional security headers (X-Frame-Options, etc.)\n- Create security.txt for responsible disclosure\n- Document security best practices and monitoring\"",
+			"group": "build"
 		}
 	]
 }
