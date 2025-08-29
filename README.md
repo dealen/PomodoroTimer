@@ -13,6 +13,8 @@ A modern, configurable Pomodoro timer web app built with Blazor WebAssembly. Ins
 ✅ **Configuration & Presets**
 - Built-in presets (Classic Pomodoro, Quick Focus)
 - Custom session configuration
+- Save custom configurations as presets
+- Delete personal presets
 - Persistent settings (saved to localStorage)
 - Enable/disable long breaks
 
@@ -52,15 +54,17 @@ Open the URL printed by `dotnet run` (usually `https://localhost:5001`) to use t
 ## Usage
 
 1. **Choose a preset** or configure custom durations
-2. **Click Start** to begin your Pomodoro session
-3. **Focus during work phases**, relax during breaks
-4. **Get notified** when phases transition
-5. **Complete cycles** to finish your session
+2. **Save custom configurations** as named presets for future use
+3. **Click Start** to begin your Pomodoro session
+4. **Focus during work phases**, relax during breaks
+5. **Get notified** when phases transition
+6. **Complete cycles** to finish your session
 
 ## Development
 
 The app includes:
 - `TimerService` — Core timer logic and state management
+- `ConfigStorageService` — User preset management and storage
 - `LocalStorageService` — Persistent configuration storage
 - `NotificationService` — Browser notification integration
 - Component-based UI with Blazor
