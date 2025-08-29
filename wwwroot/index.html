@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Pomodoro Timer</title>
+  <base href="/" />
+  <link href="css/app.css" rel="stylesheet" />
+  <link href="manifest.json" rel="manifest" />
+  <meta name="theme-color" content="#667eea" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Pomodoro Timer" />
+</head>
+<body>
+  <div id="app">Loading...</div>
+  <script src="_framework/blazor.webassembly.js"></script>
+  <script>
+    // Register service worker for PWA functionality
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/service-worker.js');
+    }
+    
+    // Notification helper functions
+    window.showNotification = function(title, options) {
+      if ('Notification' in window && Notification.permission === 'granted') {
+        new Notification(title, options);
+      }
+    };
+    
+    window.getNotificationPermission = function() {
+      return 'Notification' in window ? Notification.permission : 'denied';
+    };
+  </script>
+</body>
+</html>

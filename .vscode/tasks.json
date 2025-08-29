@@ -1,0 +1,100 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Build project",
+			"type": "shell",
+			"command": "dotnet build",
+			"problemMatcher": [
+				"$msCompile"
+			],
+			"group": "build"
+		},
+		{
+			"label": "Run project",
+			"type": "shell",
+			"command": "dotnet run",
+			"isBackground": true,
+			"group": "build"
+		},
+		{
+			"label": "Test config storage",
+			"type": "shell",
+			"command": "dotnet test PomodoroTimer.Tests/",
+			"group": "test"
+		},
+		{
+			"label": "Test config storage fixed",
+			"type": "shell",
+			"command": "dotnet test PomodoroTimer.Tests/",
+			"group": "test"
+		},
+		{
+			"label": "Remove old tests",
+			"type": "shell",
+			"command": "rm -rf Tests/",
+			"group": "build"
+		},
+		{
+			"label": "Test config storage final",
+			"type": "shell",
+			"command": "dotnet test PomodoroTimer.Tests/",
+			"group": "test"
+		},
+		{
+			"label": "Test config final v2",
+			"type": "shell",
+			"command": "dotnet test PomodoroTimer.Tests/",
+			"group": "test"
+		},
+		{
+			"label": "Build main project",
+			"type": "shell",
+			"command": "dotnet build",
+			"group": "build"
+		},
+		{
+			"label": "Clean and build",
+			"type": "shell",
+			"command": "dotnet clean && dotnet build",
+			"group": "build"
+		},
+		{
+			"label": "Remove all build artifacts",
+			"type": "shell",
+			"command": "rm -rf obj bin && rm -rf PomodoroTimer.Tests/obj PomodoroTimer.Tests/bin",
+			"group": "build"
+		},
+		{
+			"label": "Clean build attempt",
+			"type": "shell",
+			"command": "dotnet build",
+			"group": "build"
+		},
+		{
+			"label": "Run app after fix",
+			"type": "shell",
+			"command": "dotnet run",
+			"isBackground": true,
+			"group": "build"
+		},
+		{
+			"label": "Initialize git repository",
+			"type": "shell",
+			"command": "git init",
+			"group": "build"
+		},
+		{
+			"label": "Check git status",
+			"type": "shell",
+			"command": "git status",
+			"group": "build"
+		},
+		{
+			"label": "Add all files",
+			"type": "shell",
+			"command": "git add .",
+			"group": "build"
+		}
+	]
+}

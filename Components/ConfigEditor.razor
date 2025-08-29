@@ -1,0 +1,278 @@
+@namespace PomodoroTimer.Components
+@using Microsoft.AspNetCore.Components
+@inject ConfigStorageService ConfigStorage
+
+<div class="config-editor">
+    <h3>Configure Session</h3>
+    
+    <div class="form-group">
+        <label>Work Duration (minutes):</label>
+        <input type="number" @bind="WorkMinutes" @bind:event="oninput" min="1" max="120" />
+    </div>
+    
+    <div class="form-group">
+        <label>Break Duration (minutes):</label>
+        <input type="number" @bind="BreakMinutes" @bind:event="oninput" min="1" max="60" />
+    </div>
+    
+    <div class="form-group">
+        <label>
+            <input type="checkbox" @bind="EnableLongBreak" />
+            Enable Long Break
+        </label>
+    </div>
+    
+    @if (EnableLongBreak)
+    {
+        <div class="form-group">
+            <label>Long Break Duration (minutes):</label>
+            <input type="number" @bind="LongBreakMinutes" @bind:event="oninput" min="1" max="120" />
+        </div>
+        
+        <div class="form-group">
+            <label>Long Break Interval (every N cycles):</label>
+            <input type="number" @bind="Config.LongBreakInterval" @bind:event="oninput" min="2" max="10" />
+        </div>
+    }
+    
+    <div class="form-group">
+        <label>Total Cycles:</label>
+        <input type="number" @bind="Config.Cycles" @bind:event="oninput" min="1" max="20" />
+    </div>
+    
+    <div class="form-group">
+        <label>Session Name:</label>
+        <input type="text" @bind="Config.Name" placeholder="My Custom Session" />
+    </div>
+    
+    <div class="form-actions">
+        <button class="btn-primary" @onclick="ApplyConfig" disabled="@(!IsValidConfig())">
+            Apply Configuration
+        </button>
+        <button class="btn-save" @onclick="SaveConfig" disabled="@(!CanSaveConfig())">
+            Save as Preset
+        </button>
+        <button class="btn-secondary" @onclick="ResetToDefaults">
+            Reset to Defaults
+        </button>
+    </div>
+    
+    @if (!string.IsNullOrEmpty(saveMessage))
+    {
+        <div class="save-message @(saveMessageType)">
+            @saveMessage
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public PomodoroConfig Config { get; set; } = new();
+    [Parameter] public EventCallback<PomodoroConfig> OnConfigChanged { get; set; }
+    [Parameter] public EventCallback OnConfigSaved { get; set; }
+    
+    private bool EnableLongBreak { get; set; } = true;
+    private string saveMessage = "";
+    private string saveMessageType = "";
+    
+    protected override void OnInitialized()
+    {
+        // Initialize with defaults if Config is empty
+        if (Config.Work == TimeSpan.Zero)
+        {
+            ResetToDefaults();
+        }
+        
+        EnableLongBreak = Config.LongBreak.HasValue && Config.LongBreak.Value > TimeSpan.Zero;
+    }
+    
+    private bool IsValidConfig()
+    {
+        return Config.Work.TotalMinutes > 0 && 
+               Config.Break.TotalMinutes > 0 && 
+               Config.Cycles > 0 &&
+               (!EnableLongBreak || (Config.LongBreak?.TotalMinutes > 0 && Config.LongBreakInterval > 1));
+    }
+    
+    private bool CanSaveConfig()
+    {
+        return IsValidConfig() && !string.IsNullOrWhiteSpace(Config.Name);
+    }
+    
+    private async Task ApplyConfig()
+    {
+        if (!EnableLongBreak)
+        {
+            Config.LongBreak = null;
+            Config.LongBreakInterval = 0;
+        }
+        
+        await OnConfigChanged.InvokeAsync(Config);
+    }
+    
+    private async Task SaveConfig()
+    {
+        if (!CanSaveConfig()) return;
+        
+        try
+        {
+            // Check if name already exists
+            if (await ConfigStorage.ConfigNameExistsAsync(Config.Name!))
+            {
+                saveMessage = $"Updated existing preset '{Config.Name}'";
+                saveMessageType = "success";
+            }
+            else
+            {
+                saveMessage = $"Saved new preset '{Config.Name}'";
+                saveMessageType = "success";
+            }
+            
+            if (!EnableLongBreak)
+            {
+                Config.LongBreak = null;
+                Config.LongBreakInterval = 0;
+            }
+            
+            await ConfigStorage.SaveUserConfigAsync(Config);
+            await OnConfigSaved.InvokeAsync();
+            
+            // Clear message after 3 seconds
+            _ = Task.Delay(3000).ContinueWith(_ => 
+            {
+                saveMessage = "";
+                InvokeAsync(StateHasChanged);
+            });
+        }
+        catch (Exception ex)
+        {
+            saveMessage = $"Failed to save: {ex.Message}";
+            saveMessageType = "error";
+        }
+        
+        StateHasChanged();
+    }
+    
+    private void ResetToDefaults()
+    {
+        Config.Work = TimeSpan.FromMinutes(25);
+        Config.Break = TimeSpan.FromMinutes(5);
+        Config.LongBreak = TimeSpan.FromMinutes(15);
+        Config.LongBreakInterval = 4;
+        Config.Cycles = 4;
+        Config.Name = "My Custom Session";
+        EnableLongBreak = true;
+        saveMessage = "";
+    }
+    
+    // Helper properties for binding to minute inputs
+    private int WorkMinutes
+    {
+        get => (int)Config.Work.TotalMinutes;
+        set => Config.Work = TimeSpan.FromMinutes(value);
+    }
+    
+    private int BreakMinutes
+    {
+        get => (int)Config.Break.TotalMinutes;
+        set => Config.Break = TimeSpan.FromMinutes(value);
+    }
+    
+    private int? LongBreakMinutes
+    {
+        get => Config.LongBreak.HasValue ? (int?)Config.LongBreak.Value.TotalMinutes : null;
+        set => Config.LongBreak = value.HasValue ? TimeSpan.FromMinutes(value.Value) : null;
+    }
+}
+
+<style>
+    .config-editor {
+        background: #f8f9fa;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    .form-group {
+        margin-bottom: 1rem;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 0.25rem;
+        font-weight: 500;
+    }
+    
+    .form-group input[type="number"],
+    .form-group input[type="text"] {
+        width: 100%;
+        padding: 0.5rem;
+        border: 1px solid #ddd;
+        border-radius: 0.25rem;
+    }
+    
+    .form-group input[type="checkbox"] {
+        margin-right: 0.5rem;
+    }
+    
+    .form-actions {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 1rem;
+    }
+    
+    .btn-primary {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 0.25rem;
+        cursor: pointer;
+    }
+    
+    .btn-primary:disabled {
+        background-color: #6c757d;
+        cursor: not-allowed;
+    }
+    
+    .btn-secondary {
+        background-color: #6c757d;
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 0.25rem;
+        cursor: pointer;
+    }
+    
+    .btn-save {
+        background-color: #28a745;
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 0.25rem;
+        cursor: pointer;
+    }
+    
+    .btn-save:disabled {
+        background-color: #6c757d;
+        cursor: not-allowed;
+    }
+    
+    .save-message {
+        margin-top: 1rem;
+        padding: 0.5rem;
+        border-radius: 0.25rem;
+        font-size: 0.875rem;
+    }
+    
+    .save-message.success {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+    
+    .save-message.error {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
+</style>

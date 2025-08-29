@@ -1,0 +1,250 @@
+@namespace PomodoroTimer.Components
+@using System.Net.Http.Json
+@inject HttpClient Http
+@inject ConfigStorageService ConfigStorage
+
+<div class="presets-list">
+    <h3>Quick Presets</h3>
+    
+    @if (IsLoading)
+    {
+        <p>Loading presets...</p>
+    }
+    else
+    {
+        @if (UserConfigs?.Any() == true)
+        {
+            <h4>Your Saved Presets</h4>
+            <div class="presets-grid">
+                @foreach (var config in UserConfigs)
+                {
+                    <div class="preset-card user-preset @(SelectedPresetId == $"user_{config.Name}" ? "selected" : "")" 
+                         @onclick="() => SelectUserConfig(config)">
+                        <div class="preset-header">
+                            <h4>@config.Name</h4>
+                            <button class="delete-btn" @onclick="@(() => DeleteUserConfig(config.Name!))" @onclick:stopPropagation="true">
+                                ✕
+                            </button>
+                        </div>
+                        <div class="preset-details">
+                            <span>Work: @((int)config.Work.TotalMinutes) min</span>
+                            <span>Break: @((int)config.Break.TotalMinutes) min</span>
+                            @if (config.LongBreak?.TotalMinutes > 0)
+                            {
+                                <span>Long Break: @((int)config.LongBreak.Value.TotalMinutes) min</span>
+                            }
+                            <span>Cycles: @config.Cycles</span>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        
+        @if (BuiltInPresets?.Any() == true)
+        {
+            <h4>Built-in Presets</h4>
+            <div class="presets-grid">
+                @foreach (var preset in BuiltInPresets)
+                {
+                    <div class="preset-card @(SelectedPresetId == preset.Id ? "selected" : "")" 
+                         @onclick="() => SelectPreset(preset)">
+                        <h4>@preset.Name</h4>
+                        <div class="preset-details">
+                            <span>Work: @preset.WorkMinutes min</span>
+                            <span>Break: @preset.BreakMinutes min</span>
+                            @if (preset.LongBreakMinutes > 0)
+                            {
+                                <span>Long Break: @preset.LongBreakMinutes min</span>
+                            }
+                            <span>Cycles: @preset.Cycles</span>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        
+        @if ((BuiltInPresets?.Any() != true) && (UserConfigs?.Any() != true))
+        {
+            <p>No presets available</p>
+        }
+    }
+    
+    @if (!string.IsNullOrEmpty(ErrorMessage))
+    {
+        <div class="error">@ErrorMessage</div>
+    }
+</div>
+
+@code {
+    [Parameter] public EventCallback<PomodoroConfig> OnPresetSelected { get; set; }
+    
+    private List<PresetConfig>? BuiltInPresets { get; set; }
+    private List<PomodoroConfig>? UserConfigs { get; set; }
+    private bool IsLoading { get; set; } = true;
+    private string? ErrorMessage { get; set; }
+    private string? SelectedPresetId { get; set; }
+    
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadAllPresets();
+    }
+    
+    public async Task RefreshUserConfigs()
+    {
+        await LoadUserConfigs();
+        StateHasChanged();
+    }
+    
+    private async Task LoadAllPresets()
+    {
+        IsLoading = true;
+        await Task.WhenAll(LoadBuiltInPresets(), LoadUserConfigs());
+        IsLoading = false;
+        StateHasChanged();
+    }
+    
+    private async Task LoadBuiltInPresets()
+    {
+        try
+        {
+            ErrorMessage = null;
+            var response = await Http.GetFromJsonAsync<PresetResponse>("presets.json");
+            BuiltInPresets = response?.Presets ?? new List<PresetConfig>();
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Failed to load built-in presets: {ex.Message}";
+            BuiltInPresets = new List<PresetConfig>();
+        }
+    }
+    
+    private async Task LoadUserConfigs()
+    {
+        try
+        {
+            UserConfigs = await ConfigStorage.GetUserConfigsAsync();
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Failed to load user configs: {ex.Message}";
+            UserConfigs = new List<PomodoroConfig>();
+        }
+    }
+    
+    private async Task SelectPreset(PresetConfig preset)
+    {
+        SelectedPresetId = preset.Id;
+        
+        var config = new PomodoroConfig
+        {
+            Name = preset.Name,
+            Work = TimeSpan.FromMinutes(preset.WorkMinutes),
+            Break = TimeSpan.FromMinutes(preset.BreakMinutes),
+            LongBreak = preset.LongBreakMinutes > 0 ? TimeSpan.FromMinutes(preset.LongBreakMinutes) : null,
+            LongBreakInterval = preset.LongBreakInterval,
+            Cycles = preset.Cycles
+        };
+        
+        await OnPresetSelected.InvokeAsync(config);
+    }
+    
+    private async Task SelectUserConfig(PomodoroConfig config)
+    {
+        SelectedPresetId = $"user_{config.Name}";
+        await OnPresetSelected.InvokeAsync(config);
+    }
+    
+    private async Task DeleteUserConfig(string configName)
+    {
+        try
+        {
+            await ConfigStorage.DeleteUserConfigAsync(configName);
+            await LoadUserConfigs();
+            
+            // Clear selection if we deleted the selected config
+            if (SelectedPresetId == $"user_{configName}")
+            {
+                SelectedPresetId = null;
+            }
+            
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Failed to delete config: {ex.Message}";
+        }
+    }
+    
+    public class PresetResponse
+    {
+        public List<PresetConfig> Presets { get; set; } = new();
+    }
+    
+    public class PresetConfig
+    {
+        public string Id { get; set; } = "";
+        public string Name { get; set; } = "";
+        public int WorkMinutes { get; set; }
+        public int BreakMinutes { get; set; }
+        public int LongBreakMinutes { get; set; }
+        public int LongBreakInterval { get; set; }
+        public int Cycles { get; set; }
+    }
+}
+
+<style>
+    .presets-list {
+        margin-bottom: 1rem;
+    }
+    
+    .presets-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+    
+    .preset-card {
+        background: white;
+        border: 2px solid #e9ecef;
+        border-radius: 0.5rem;
+        padding: 1rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    
+    .preset-card:hover {
+        border-color: #007bff;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    
+    .preset-card.selected {
+        border-color: #007bff;
+        background-color: #f8f9ff;
+    }
+    
+    .preset-card h4 {
+        margin: 0 0 0.5rem 0;
+        color: #007bff;
+    }
+    
+    .preset-details {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+    
+    .preset-details span {
+        font-size: 0.875rem;
+        color: #6c757d;
+    }
+    
+    .error {
+        color: #dc3545;
+        background: #f8d7da;
+        padding: 0.5rem;
+        border-radius: 0.25rem;
+        margin-top: 1rem;
+    }
+</style>

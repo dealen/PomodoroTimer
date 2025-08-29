@@ -1,0 +1,22 @@
+{
+  "presets": [
+    {
+      "id": "classic",
+      "name": "Classic Pomodoro",
+      "workMinutes": 25,
+      "breakMinutes": 5,
+      "longBreakMinutes": 15,
+      "longBreakInterval": 4,
+      "cycles": 4
+    },
+    {
+      "id": "quick",
+      "name": "Quick Focus",
+      "workMinutes": 15,
+      "breakMinutes": 3,
+      "longBreakMinutes": 10,
+      "longBreakInterval": 3,
+      "cycles": 3
+    }
+  ]
+}

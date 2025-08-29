@@ -1,0 +1,303 @@
+@page "/"
+@using PomodoroTimer.Components
+@inject TimerService Timer
+@inject LocalStorageService LocalStorage
+@inject NotificationService Notifications
+
+<div class="app-container">
+    <h1>Pomodoro Timer</h1>
+    
+    <!-- Configuration Section -->
+    @if (!state.IsRunning && state.Phase == TimerPhase.Idle)
+    {
+        <div class="config-section">
+            <PresetsList @ref="presetsListRef" OnPresetSelected="OnPresetSelected" />
+            <ConfigEditor Config="currentConfig" OnConfigChanged="OnConfigChanged" OnConfigSaved="OnConfigSaved" />
+        </div>
+    }
+    
+    <!-- Timer Display -->
+    <div class="timer-section">
+        <div class="timer-display">
+            <div class="phase-indicator">
+                <h2>@GetPhaseDisplayName(state.Phase)</h2>
+                @if (state.Phase != TimerPhase.Idle && currentConfig != null)
+                {
+                    <p class="session-name">@currentConfig.Name</p>
+                }
+            </div>
+            
+            <div class="time-display">
+                <span class="time">@Format(state.Remaining)</span>
+            </div>
+            
+            @if (state.Phase != TimerPhase.Idle)
+            {
+                <div class="progress-info">
+                    <p>Cycle @state.CurrentCycle of @(currentConfig?.Cycles ?? 0)</p>
+                    @if (state.Phase == TimerPhase.Work)
+                    {
+                        <p class="next-phase">Next: @GetNextPhaseHint()</p>
+                    }
+                </div>
+            }
+        </div>
+        
+        <!-- Timer Controls -->
+        <div class="timer-controls">
+            @if (state.Phase == TimerPhase.Idle)
+            {
+                <button class="btn-large btn-start" @onclick="Start" disabled="@(currentConfig == null)">
+                    Start Session
+                </button>
+            }
+            else if (state.IsRunning)
+            {
+                <button class="btn-large btn-pause" @onclick="Pause">Pause</button>
+            }
+            else
+            {
+                <button class="btn-large btn-resume" @onclick="Resume">Resume</button>
+            }
+            
+            @if (state.Phase != TimerPhase.Idle)
+            {
+                <button class="btn-secondary" @onclick="Reset">Reset</button>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    private TimerUpdate state = new TimerUpdate(TimerPhase.Idle, TimeSpan.Zero, 0, false);
+    private PomodoroConfig? currentConfig;
+    private PresetsList? presetsListRef;
+    private const string CONFIG_STORAGE_KEY = "pomodoro_current_config";
+    private TimerPhase lastPhase = TimerPhase.Idle;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Timer.OnTick += OnTimerTick;
+        state = Timer.GetState();
+        
+        // Request notification permission
+        await Notifications.RequestPermissionAsync();
+        
+        // Try to load saved config from localStorage
+        var savedConfig = await LocalStorage.GetItemAsync<PomodoroConfig>(CONFIG_STORAGE_KEY);
+        
+        currentConfig = savedConfig ?? new PomodoroConfig
+        {
+            Name = "Default Session",
+            Work = TimeSpan.FromMinutes(25),
+            Break = TimeSpan.FromMinutes(5),
+            LongBreak = TimeSpan.FromMinutes(15),
+            LongBreakInterval = 4,
+            Cycles = 4
+        };
+    }
+    
+    private async void OnTimerTick(TimerUpdate update)
+    {
+        // Check for phase transitions and show notifications
+        if (update.Phase != lastPhase && update.Phase != TimerPhase.Idle)
+        {
+            await ShowPhaseNotification(update.Phase);
+        }
+        
+        lastPhase = update.Phase;
+        state = update;
+        await InvokeAsync(StateHasChanged);
+    }
+    
+    private async Task ShowPhaseNotification(TimerPhase phase)
+    {
+        var (title, body) = phase switch
+        {
+            TimerPhase.Work => ("Work Time!", "Time to focus and get productive!"),
+            TimerPhase.Break => ("Break Time!", "Take a short break and relax."),
+            TimerPhase.LongBreak => ("Long Break!", "You've earned a longer break. Rest up!"),
+            TimerPhase.Completed => ("Session Complete!", "Great job! Your Pomodoro session is finished."),
+            _ => ("", "")
+        };
+        
+        if (!string.IsNullOrEmpty(title))
+        {
+            await Notifications.ShowNotificationAsync(title, body);
+        }
+    }
+
+    void Start()
+    {
+        if (currentConfig != null)
+        {
+            Timer.Start(currentConfig);
+        }
+    }
+
+    void Pause() => Timer.Pause();
+    void Resume() => Timer.Resume();
+    void Reset() => Timer.Reset();
+
+    void OnPresetSelected(PomodoroConfig config)
+    {
+        currentConfig = config;
+        _ = SaveCurrentConfig(); // Fire and forget
+        StateHasChanged();
+    }
+    
+    void OnConfigChanged(PomodoroConfig config)
+    {
+        currentConfig = config;
+        _ = SaveCurrentConfig(); // Fire and forget
+        StateHasChanged();
+    }
+    
+    async Task OnConfigSaved()
+    {
+        // Refresh the presets list to show the newly saved config
+        if (presetsListRef != null)
+        {
+            await presetsListRef.RefreshUserConfigs();
+        }
+    }
+    
+    private async Task SaveCurrentConfig()
+    {
+        if (currentConfig != null)
+        {
+            await LocalStorage.SetItemAsync(CONFIG_STORAGE_KEY, currentConfig);
+        }
+    }
+    
+    string GetPhaseDisplayName(TimerPhase phase) => phase switch
+    {
+        TimerPhase.Work => "Work Time",
+        TimerPhase.Break => "Short Break",
+        TimerPhase.LongBreak => "Long Break",
+        TimerPhase.Completed => "Session Complete",
+        _ => "Ready to Start"
+    };
+    
+    string GetNextPhaseHint()
+    {
+        if (currentConfig == null) return "";
+        
+        var isLongBreakNext = currentConfig.LongBreak.HasValue && 
+                             currentConfig.LongBreakInterval > 0 && 
+                             state.CurrentCycle % currentConfig.LongBreakInterval == 0;
+        
+        return isLongBreakNext ? "Long Break" : "Short Break";
+    }
+
+    string Format(TimeSpan ts) => ts.ToString(@"mm\:ss");
+}
+
+<style>
+    .app-container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 1rem;
+    }
+    
+    .config-section {
+        margin-bottom: 2rem;
+    }
+    
+    .timer-section {
+        text-align: center;
+    }
+    
+    .timer-display {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 1rem;
+        padding: 2rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .phase-indicator h2 {
+        margin: 0 0 0.5rem 0;
+        font-size: 1.5rem;
+    }
+    
+    .session-name {
+        margin: 0;
+        opacity: 0.8;
+        font-size: 0.9rem;
+    }
+    
+    .time-display {
+        margin: 1.5rem 0;
+    }
+    
+    .time {
+        font-size: 4rem;
+        font-weight: bold;
+        font-family: 'Courier New', monospace;
+    }
+    
+    .progress-info p {
+        margin: 0.25rem 0;
+        opacity: 0.9;
+    }
+    
+    .next-phase {
+        font-style: italic;
+    }
+    
+    .timer-controls {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    .btn-large {
+        padding: 1rem 2rem;
+        font-size: 1.2rem;
+        border: none;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        min-width: 150px;
+    }
+    
+    .btn-start {
+        background-color: #28a745;
+        color: white;
+    }
+    
+    .btn-pause {
+        background-color: #ffc107;
+        color: #212529;
+    }
+    
+    .btn-resume {
+        background-color: #17a2b8;
+        color: white;
+    }
+    
+    .btn-large:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    
+    .btn-large:disabled {
+        background-color: #6c757d;
+        cursor: not-allowed;
+        opacity: 0.6;
+    }
+    
+    @@media (max-width: 768px) {
+        .time {
+            font-size: 2.5rem;
+        }
+        
+        .btn-large {
+            min-width: 120px;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+        }
+    }
+</style>
