@@ -1,11 +1,12 @@
 const CACHE_NAME = 'pomodoro-timer-v1';
+const baseHref = document.getElementsByTagName('base')[0]?.href ?? '/PomodoroTimer/';
 const urlsToCache = [
-  '/',
-  '/css/app.css',
-  '/manifest.json',
-  '/icon-192.png',
-  '/icon-512.png',
-  '/presets.json'
+  '/PomodoroTimer/',
+  '/PomodoroTimer/css/app.css',
+  '/PomodoroTimer/manifest.json',
+  '/PomodoroTimer/icon-192.png',
+  '/PomodoroTimer/icon-512.png',
+  '/PomodoroTimer/presets.json'
 ];
 
 self.addEventListener('install', event => {

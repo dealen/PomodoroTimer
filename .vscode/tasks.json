@@ -95,6 +95,36 @@
 			"type": "shell",
 			"command": "git add .",
 			"group": "build"
+		},
+		{
+			"label": "Initial commit",
+			"type": "shell",
+			"command": "git commit -m \"Initial commit: Complete Pomodoro Timer with custom preset saving\"",
+			"group": "build"
+		},
+		{
+			"label": "Check git config",
+			"type": "shell",
+			"command": "git config --list | grep user",
+			"group": "build"
+		},
+		{
+			"label": "Rename branch to main",
+			"type": "shell",
+			"command": "git branch -M main",
+			"group": "build"
+		},
+		{
+			"label": "Commit README update",
+			"type": "shell",
+			"command": "git add README.md && git commit -m \"docs: Update README with custom preset saving features\"",
+			"group": "build"
+		},
+		{
+			"label": "Stage GitHub Pages files",
+			"type": "shell",
+			"command": "git add .",
+			"group": "build"
 		}
 	]
 }
