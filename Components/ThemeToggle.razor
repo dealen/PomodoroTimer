@@ -1,0 +1,38 @@
+@using PomodoroTimer.Services
+@inject ThemeService ThemeService
+@implements IDisposable
+
+<button class="theme-toggle" @onclick="ToggleTheme" title="Toggle Dark/Light Mode">
+    @if (ThemeService.IsDarkMode)
+    {
+        <span>☀️</span>
+    }
+    else
+    {
+        <span>🌙</span>
+    }
+</button>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        ThemeService.ThemeChanged += OnThemeChanged;
+        await ThemeService.InitializeAsync();
+        StateHasChanged();
+    }
+    
+    private async Task ToggleTheme()
+    {
+        await ThemeService.ToggleThemeAsync();
+    }
+    
+    private void OnThemeChanged(object? sender, string theme)
+    {
+        InvokeAsync(StateHasChanged);
+    }
+    
+    public void Dispose()
+    {
+        ThemeService.ThemeChanged -= OnThemeChanged;
+    }
+}

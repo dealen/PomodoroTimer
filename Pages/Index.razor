@@ -18,9 +18,9 @@
     
     <!-- Timer Display -->
     <div class="timer-section">
-        <div class="timer-display">
+        <div class="timer-display @GetTimerModeClass()">
             <div class="phase-indicator">
-                <h2>@GetPhaseDisplayName(state.Phase)</h2>
+                <h2><span class="mode-indicator @GetModeIndicatorClass()"></span>@GetPhaseDisplayName(state.Phase)</h2>
                 @if (state.Phase != TimerPhase.Idle && currentConfig != null)
                 {
                     <p class="session-name">@currentConfig.Name</p>
@@ -28,11 +28,15 @@
             </div>
             
             <div class="time-display">
-                <span class="time">@Format(state.Remaining)</span>
+                <h1 class="time">@Format(state.Remaining)</h1>
             </div>
             
             @if (state.Phase != TimerPhase.Idle)
             {
+                <div class="progress-container">
+                    <div class="progress-bar @GetTimerModeClass()" style="width: @GetProgressPercentage()%"></div>
+                </div>
+                
                 <div class="progress-info">
                     <p>Cycle @state.CurrentCycle of @(currentConfig?.Cycles ?? 0)</p>
                     @if (state.Phase == TimerPhase.Work)
@@ -191,6 +195,46 @@
     }
 
     string Format(TimeSpan ts) => ts.ToString(@"mm\:ss");
+    
+    string GetTimerModeClass()
+    {
+        return state.Phase switch
+        {
+            TimerPhase.Work => "work-mode",
+            TimerPhase.Break => "break-mode",
+            TimerPhase.LongBreak => "break-mode",
+            _ => ""
+        };
+    }
+    
+    string GetModeIndicatorClass()
+    {
+        return state.Phase switch
+        {
+            TimerPhase.Work => "work",
+            TimerPhase.Break => "break",
+            TimerPhase.LongBreak => "break",
+            _ => ""
+        };
+    }
+    
+    double GetProgressPercentage()
+    {
+        if (currentConfig == null || state.Phase == TimerPhase.Idle) return 0;
+        
+        var totalDuration = state.Phase switch
+        {
+            TimerPhase.Work => currentConfig.Work,
+            TimerPhase.Break => currentConfig.Break,
+            TimerPhase.LongBreak => currentConfig.LongBreak ?? currentConfig.Break,
+            _ => TimeSpan.Zero
+        };
+        
+        if (totalDuration == TimeSpan.Zero) return 0;
+        
+        var elapsed = totalDuration - state.Remaining;
+        return Math.Max(0, Math.Min(100, (elapsed.TotalSeconds / totalDuration.TotalSeconds) * 100));
+    }
 }
 
 <style>
@@ -208,17 +252,12 @@
         text-align: center;
     }
     
-    .timer-display {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        border-radius: 1rem;
-        padding: 2rem;
-        margin-bottom: 1.5rem;
-    }
-    
     .phase-indicator h2 {
         margin: 0 0 0.5rem 0;
         font-size: 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
     
     .session-name {
@@ -229,12 +268,6 @@
     
     .time-display {
         margin: 1.5rem 0;
-    }
-    
-    .time {
-        font-size: 4rem;
-        font-weight: bold;
-        font-family: 'Courier New', monospace;
     }
     
     .progress-info p {
@@ -264,8 +297,12 @@
     }
     
     .btn-start {
-        background-color: #28a745;
+        background-color: var(--btn-success);
         color: white;
+    }
+    
+    .btn-start:hover:not(:disabled) {
+        background-color: var(--btn-success-hover);
     }
     
     .btn-pause {
@@ -280,20 +317,16 @@
     
     .btn-large:hover:not(:disabled) {
         transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        box-shadow: 0 4px 8px var(--card-shadow);
     }
     
     .btn-large:disabled {
-        background-color: #6c757d;
+        background-color: var(--btn-secondary);
         cursor: not-allowed;
         opacity: 0.6;
     }
     
     @@media (max-width: 768px) {
-        .time {
-            font-size: 2.5rem;
-        }
-        
         .btn-large {
             min-width: 120px;
             padding: 0.75rem 1.5rem;
