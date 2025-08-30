@@ -282,6 +282,90 @@
 			"type": "shell",
 			"command": "git add . && git commit -m \"chore: Update VS Code tasks configuration\"",
 			"group": "build"
+		},
+		{
+			"label": "Pull and merge",
+			"type": "shell",
+			"command": "git pull --no-rebase origin CI-CD_For_Github_Pages",
+			"group": "build"
+		},
+		{
+			"label": "Force push theme system",
+			"type": "shell",
+			"command": "git push --force-with-lease origin CI-CD_For_Github_Pages",
+			"group": "build"
+		},
+		{
+			"label": "Stop running app",
+			"type": "shell",
+			"command": "pkill -f 'dotnet.*watch.*run' || true",
+			"group": "build"
+		},
+		{
+			"label": "Run app with theme system",
+			"type": "shell",
+			"command": "dotnet build && dotnet run",
+			"isBackground": true,
+			"group": "run"
+		},
+		{
+			"label": "Run app on port 5001",
+			"type": "shell",
+			"command": "killall dotnet || true && sleep 2 && dotnet run --urls http://localhost:5001",
+			"isBackground": true,
+			"group": "run"
+		},
+		{
+			"label": "Test production build",
+			"type": "shell",
+			"command": "dotnet publish -c Release -o dist/",
+			"group": "build"
+		},
+		{
+			"label": "Stop running app",
+			"type": "shell",
+			"command": "killall dotnet || true",
+			"group": "build"
+		},
+		{
+			"label": "Run fixed app",
+			"type": "shell",
+			"command": "dotnet build && dotnet run --urls http://localhost:5001",
+			"isBackground": true,
+			"group": "run"
+		},
+		{
+			"label": "Run app on port 5002",
+			"type": "shell",
+			"command": "sudo killall -9 dotnet || true && sleep 2 && dotnet run --urls http://localhost:5002",
+			"isBackground": true,
+			"group": "run"
+		},
+		{
+			"label": "Kill processes and run on 5002",
+			"type": "shell",
+			"command": "lsof -ti:5001 | xargs kill -9 || true && lsof -ti:5000 | xargs kill -9 || true && sleep 2 && dotnet run --urls http://localhost:5002",
+			"isBackground": true,
+			"group": "run"
+		},
+		{
+			"label": "Test build after fixes",
+			"type": "shell",
+			"command": "dotnet build",
+			"group": "build"
+		},
+		{
+			"label": "Restart app with fixes",
+			"type": "shell",
+			"command": "lsof -ti:5002 | xargs kill -9 || true && sleep 1 && dotnet run --urls http://localhost:5002",
+			"isBackground": true,
+			"group": "run"
+		},
+		{
+			"label": "Stage loading fixes",
+			"type": "shell",
+			"command": "git add .",
+			"group": "build"
 		}
 	]
 }
