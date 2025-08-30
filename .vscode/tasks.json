@@ -246,6 +246,42 @@
 			"type": "shell",
 			"command": "git add .",
 			"group": "build"
+		},
+		{
+			"label": "Commit theme system",
+			"type": "shell",
+			"command": "git commit -m \"feat: Implement dark/light theme system with work/break color differentiation\n\n- Add comprehensive CSS variables for theme support\n- Create ThemeService for theme state management and persistence\n- Implement ThemeToggle component with sun/moon icons\n- Add dynamic timer display colors (blue for work, green for break)\n- Include progress bars with mode-specific styling\n- Support system preference detection and localStorage persistence\n- Add smooth transitions for theme switching\n- Update timer display with enhanced visual indicators\n- Fix CSS media query escaping in Razor components\n- Resolve assembly attribute duplicate errors\"",
+			"group": "build"
+		},
+		{
+			"label": "Push theme system to GitHub",
+			"type": "shell",
+			"command": "git push origin CI-CD_For_Github_Pages",
+			"group": "build"
+		},
+		{
+			"label": "Pull latest changes",
+			"type": "shell",
+			"command": "git pull origin CI-CD_For_Github_Pages",
+			"group": "build"
+		},
+		{
+			"label": "Pull and rebase",
+			"type": "shell",
+			"command": "git config pull.rebase true && git pull origin CI-CD_For_Github_Pages",
+			"group": "build"
+		},
+		{
+			"label": "Check git status",
+			"type": "shell",
+			"command": "git status",
+			"group": "build"
+		},
+		{
+			"label": "Commit tasks changes",
+			"type": "shell",
+			"command": "git add . && git commit -m \"chore: Update VS Code tasks configuration\"",
+			"group": "build"
 		}
 	]
 }
