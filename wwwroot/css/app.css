@@ -1,12 +1,19 @@
 /* CSS Variables for Theme Support */
 :root {
-    /* Light Theme Colors */
-    --bg-color: #ffffff;
+    /* Light Mode Variables */
+:root {
+    --bg-color: #f8f9fa;
     --text-color: #333333;
-    --sidebar-bg: #f7f7f7;
-    --border-color: #eaeaea;
     --card-bg: #ffffff;
+    --sidebar-bg: #ffffff;
+    --border-color: #dee2e6;
     --card-shadow: rgba(0, 0, 0, 0.1);
+    
+    /* Light mode colors for forms and inputs */
+    --form-bg: #ffffff;
+    --input-bg: #ffffff;
+    --input-text: #333333;
+    --input-border: #dee2e6;
     
     /* Work Timer Colors (Blue) */
     --work-primary: #667eea;
@@ -28,14 +35,20 @@
     --btn-danger-hover: #c82333;
 }
 
-/* Dark Theme Colors */
+/* Dark Mode Variables */
 [data-theme="dark"] {
     --bg-color: #121212;
     --text-color: #ffffff;
-    --sidebar-bg: #1e1e1e;
-    --border-color: #333333;
-    --card-bg: #1e1e1e;
+    --card-bg: #2a2a2a;
+    --sidebar-bg: #1a1a1a;
+    --border-color: #444444;
     --card-shadow: rgba(0, 0, 0, 0.5);
+    
+    /* Dark mode specific colors for forms and inputs */
+    --form-bg: #1a1a1a;
+    --input-bg: #333333;
+    --input-text: #ffffff;
+    --input-border: #555555;
     
     /* Work Timer Colors (Blue - adjusted for dark) */
     --work-primary: #7c3aed;
@@ -240,13 +253,26 @@ button:disabled {
     font-size: 1.25rem;
 }
 
+/* Form Styling */
+.form-group, 
+form,
+.configuration-panel {
+    background-color: var(--form-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    margin: 1rem 0;
+    box-shadow: 0 2px 8px var(--card-shadow);
+    transition: all 0.3s ease;
+}
+
 /* Input Fields */
 input[type="number"], 
 input[type="text"], 
 select {
-    background-color: var(--card-bg);
-    color: var(--text-color);
-    border: 2px solid var(--border-color);
+    background-color: var(--input-bg);
+    color: var(--input-text);
+    border: 2px solid var(--input-border);
     padding: 0.75rem;
     border-radius: 0.5rem;
     margin: 0.5rem 0;
@@ -265,6 +291,8 @@ select:focus {
     border-color: var(--btn-primary);
     box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
     transform: translateY(-1px);
+    background-color: var(--input-bg);
+    color: var(--input-text);
 }
 
 /* Labels */
@@ -286,6 +314,44 @@ input[type="checkbox"] {
     margin-right: 0.5rem;
     transform: scale(1.2);
     accent-color: var(--btn-primary);
+}
+
+/* Dark Mode Text Overrides */
+[data-theme="dark"] * {
+    color: var(--text-color);
+}
+
+/* Exception: Break time keeps green background with appropriate text */
+[data-theme="dark"] .break-mode .timer-display,
+[data-theme="dark"] .break-mode h1,
+[data-theme="dark"] .break-mode h2,
+[data-theme="dark"] .break-mode .status {
+    background-color: var(--break-light);
+    color: #ffffff;
+}
+
+/* Input placeholder text in dark mode */
+[data-theme="dark"] input::placeholder {
+    color: #888888;
+}
+
+/* Ensure buttons maintain their styling */
+[data-theme="dark"] button {
+    color: white;
+}
+
+/* Ensure preset items have proper contrast */
+[data-theme="dark"] .preset-item {
+    background: var(--card-bg);
+    color: var(--text-color);
+}
+
+/* Form group styling in dark mode */
+[data-theme="dark"] .form-group,
+[data-theme="dark"] form,
+[data-theme="dark"] .configuration-panel {
+    background-color: var(--form-bg);
+    color: var(--text-color);
 }
 
 /* Form Groups */
