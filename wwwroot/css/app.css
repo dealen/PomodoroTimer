@@ -1,30 +1,29 @@
 /* CSS Variables for Theme Support */
 :root {
-    /* Light Mode Variables */
-:root {
-    --bg-color: #f8f9fa;
+  /* Light Mode Variables */
+  --bg-color: #f8f9fa;
     --text-color: #333333;
     --card-bg: #ffffff;
     --sidebar-bg: #ffffff;
     --border-color: #dee2e6;
     --card-shadow: rgba(0, 0, 0, 0.1);
-    
+
     /* Light mode colors for forms and inputs */
     --form-bg: #ffffff;
     --input-bg: #ffffff;
     --input-text: #333333;
     --input-border: #dee2e6;
-    
+
     /* Work Timer Colors (Blue) */
     --work-primary: #667eea;
     --work-secondary: #764ba2;
     --work-light: #e3f2fd;
-    
+
     /* Break Timer Colors (Green) */
     --break-primary: #4caf50;
     --break-secondary: #45a049;
     --break-light: #e8f5e8;
-    
+
     /* Button Colors */
     --btn-primary: #007bff;
     --btn-primary-hover: #0056b3;
@@ -33,33 +32,33 @@
     --btn-success-hover: #218838;
     --btn-danger: #dc3545;
     --btn-danger-hover: #c82333;
-}
+  }
 
-/* Dark Mode Variables */
-[data-theme="dark"] {
+  /* Dark Mode Variables */
+  [data-theme="dark"] {
     --bg-color: #121212;
     --text-color: #ffffff;
     --card-bg: #2a2a2a;
     --sidebar-bg: #1a1a1a;
     --border-color: #444444;
     --card-shadow: rgba(0, 0, 0, 0.5);
-    
+
     /* Dark mode specific colors for forms and inputs */
     --form-bg: #1a1a1a;
     --input-bg: #333333;
     --input-text: #ffffff;
     --input-border: #555555;
-    
+
     /* Work Timer Colors (Blue - adjusted for dark) */
     --work-primary: #7c3aed;
     --work-secondary: #8b5cf6;
     --work-light: #1e1b3a;
-    
+
     /* Break Timer Colors (Green - adjusted for dark) */
     --break-primary: #10b981;
     --break-secondary: #059669;
     --break-light: #1a2e1a;
-    
+
     /* Button Colors for Dark Mode */
     --btn-primary: #0d6efd;
     --btn-primary-hover: #0b5ed7;
@@ -68,38 +67,39 @@
     --btn-success-hover: #157347;
     --btn-danger: #dc3545;
     --btn-danger-hover: #bb2d3b;
-}
+  }
 
-html, body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  html,
+  body {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     margin: 0;
     padding: 0;
     background-color: var(--bg-color);
     color: var(--text-color);
     transition: background-color 0.3s ease, color 0.3s ease;
-}
+  }
 
-.page {
+  .page {
     position: relative;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-}
+  }
 
-.sidebar {
+  .sidebar {
     background: var(--sidebar-bg);
     padding: 1rem;
     border-bottom: 1px solid var(--border-color);
     transition: background-color 0.3s ease, border-color 0.3s ease;
-}
+  }
 
-main {
+  main {
     flex: 1;
     padding: 1rem;
-}
+  }
 
-/* Theme Toggle Button */
-.theme-toggle {
+  /* Theme Toggle Button */
+  .theme-toggle {
     position: fixed;
     top: 1rem;
     right: 1rem;
@@ -116,77 +116,92 @@ main {
     transition: all 0.3s ease;
     box-shadow: 0 2px 8px var(--card-shadow);
     z-index: 1000;
-}
+  }
 
-.theme-toggle:hover {
+  .theme-toggle:hover {
     transform: scale(1.1);
     box-shadow: 0 4px 12px var(--card-shadow);
-}
+  }
 
-/* Timer Display - Dynamic Colors */
-.timer-display {
+  /* Timer Display - Dynamic Colors */
+  .timer-display {
     text-align: center;
     padding: 2rem;
     border-radius: 1rem;
     margin: 1rem 0;
     transition: all 0.3s ease;
     box-shadow: 0 4px 16px var(--card-shadow);
-}
+  }
 
-.timer-display.work-mode {
-    background: linear-gradient(135deg, var(--work-primary), var(--work-secondary));
+  .timer-display.work-mode {
+    background: linear-gradient(
+      135deg,
+      var(--work-primary),
+      var(--work-secondary)
+    );
     color: white;
-}
+  }
 
-.timer-display.break-mode {
-    background: linear-gradient(135deg, var(--break-primary), var(--break-secondary));
+  .timer-display.break-mode {
+    background: linear-gradient(
+      135deg,
+      var(--break-primary),
+      var(--break-secondary)
+    );
     color: white;
-}
+  }
 
-.timer-display h1 {
+  .timer-display h1 {
     font-size: 4rem;
     margin: 0;
     font-weight: 300;
-}
+  }
 
-.timer-display h2 {
+  .timer-display h2 {
     font-size: 1.5rem;
     margin: 0.5rem 0;
     opacity: 0.9;
-}
+  }
 
-.timer-display p {
+  /* Enhanced styling for break mode header */
+  .timer-display.break-mode h2 {
+    font-weight: 600;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    opacity: 1;
+  }
+
+  .timer-display p {
     font-size: 1.1rem;
     margin: 0.5rem 0;
     opacity: 0.8;
-}
+  }
 
-/* Progress Bar */
-.progress-container {
+  /* Progress Bar */
+  .progress-container {
     width: 100%;
     height: 8px;
     background: rgba(255, 255, 255, 0.3);
     border-radius: 4px;
     margin: 1rem 0;
     overflow: hidden;
-}
+  }
 
-.progress-bar {
+  .progress-bar {
     height: 100%;
     transition: width 1s linear;
     border-radius: 4px;
-}
+  }
 
-.progress-bar.work-mode {
+  .progress-bar.work-mode {
     background: rgba(255, 255, 255, 0.8);
-}
+  }
 
-.progress-bar.break-mode {
+  .progress-bar.break-mode {
     background: rgba(255, 255, 255, 0.8);
-}
+  }
 
-/* Buttons */
-button {
+  /* Buttons */
+  button {
     background-color: var(--btn-primary);
     color: white;
     border: none;
@@ -199,44 +214,44 @@ button {
     font-family: inherit;
     transition: all 0.3s ease;
     box-shadow: 0 2px 4px var(--card-shadow);
-}
+  }
 
-button:hover {
+  button:hover {
     background-color: var(--btn-primary-hover);
     transform: translateY(-1px);
     box-shadow: 0 4px 8px var(--card-shadow);
-}
+  }
 
-button:active {
+  button:active {
     transform: translateY(0);
-}
+  }
 
-button:disabled {
+  button:disabled {
     background-color: var(--btn-secondary);
     cursor: not-allowed;
     transform: none;
     box-shadow: none;
-}
+  }
 
-/* Special Button Types */
-.btn-success {
+  /* Special Button Types */
+  .btn-success {
     background-color: var(--btn-success);
-}
+  }
 
-.btn-success:hover {
+  .btn-success:hover {
     background-color: var(--btn-success-hover);
-}
+  }
 
-.btn-danger {
+  .btn-danger {
     background-color: var(--btn-danger);
-}
+  }
 
-.btn-danger:hover {
+  .btn-danger:hover {
     background-color: var(--btn-danger-hover);
-}
+  }
 
-/* Configuration Panel */
-.config-panel {
+  /* Configuration Panel */
+  .config-panel {
     background: var(--card-bg);
     border: 2px solid var(--border-color);
     border-radius: 1rem;
@@ -244,19 +259,19 @@ button:disabled {
     margin: 1rem 0;
     box-shadow: 0 4px 12px var(--card-shadow);
     transition: all 0.3s ease;
-}
+  }
 
-.config-panel h3 {
+  .config-panel h3 {
     margin-top: 0;
     margin-bottom: 1.5rem;
     color: var(--text-color);
     font-size: 1.25rem;
-}
+  }
 
-/* Form Styling */
-.form-group, 
-form,
-.configuration-panel {
+  /* Form Styling */
+  .form-group,
+  form,
+  .configuration-panel {
     background-color: var(--form-bg);
     border: 1px solid var(--border-color);
     border-radius: 0.75rem;
@@ -264,12 +279,12 @@ form,
     margin: 1rem 0;
     box-shadow: 0 2px 8px var(--card-shadow);
     transition: all 0.3s ease;
-}
+  }
 
-/* Input Fields */
-input[type="number"], 
-input[type="text"], 
-select {
+  /* Input Fields */
+  input[type="number"],
+  input[type="text"],
+  select {
     background-color: var(--input-bg);
     color: var(--input-text);
     border: 2px solid var(--input-border);
@@ -282,96 +297,96 @@ select {
     font-family: inherit;
     box-sizing: border-box;
     transition: all 0.3s ease;
-}
+  }
 
-input[type="number"]:focus, 
-input[type="text"]:focus, 
-select:focus {
+  input[type="number"]:focus,
+  input[type="text"]:focus,
+  select:focus {
     outline: none;
     border-color: var(--btn-primary);
     box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
     transform: translateY(-1px);
     background-color: var(--input-bg);
     color: var(--input-text);
-}
+  }
 
-/* Labels */
-label {
+  /* Labels */
+  label {
     color: var(--text-color);
     font-weight: 500;
     font-size: 1rem;
     margin-bottom: 0.5rem;
     display: block;
     margin-top: 1rem;
-}
+  }
 
-label:first-child {
+  label:first-child {
     margin-top: 0;
-}
+  }
 
-/* Checkboxes */
-input[type="checkbox"] {
+  /* Checkboxes */
+  input[type="checkbox"] {
     margin-right: 0.5rem;
     transform: scale(1.2);
     accent-color: var(--btn-primary);
-}
+  }
 
-/* Dark Mode Text Overrides */
-[data-theme="dark"] * {
+  /* Dark Mode Text Overrides */
+  [data-theme="dark"] * {
     color: var(--text-color);
-}
+  }
 
-/* Exception: Break time keeps green background with appropriate text */
-[data-theme="dark"] .break-mode .timer-display,
-[data-theme="dark"] .break-mode h1,
-[data-theme="dark"] .break-mode h2,
-[data-theme="dark"] .break-mode .status {
+  /* Exception: Break time keeps green background with appropriate text */
+  [data-theme="dark"] .break-mode .timer-display,
+  [data-theme="dark"] .break-mode h1,
+  [data-theme="dark"] .break-mode h2,
+  [data-theme="dark"] .break-mode .status {
     background-color: var(--break-light);
     color: #ffffff;
-}
+  }
 
-/* Input placeholder text in dark mode */
-[data-theme="dark"] input::placeholder {
+  /* Input placeholder text in dark mode */
+  [data-theme="dark"] input::placeholder {
     color: #888888;
-}
+  }
 
-/* Ensure buttons maintain their styling */
-[data-theme="dark"] button {
+  /* Ensure buttons maintain their styling */
+  [data-theme="dark"] button {
     color: white;
-}
+  }
 
-/* Ensure preset items have proper contrast */
-[data-theme="dark"] .preset-item {
+  /* Ensure preset items have proper contrast */
+  [data-theme="dark"] .preset-item {
     background: var(--card-bg);
     color: var(--text-color);
-}
+  }
 
-/* Form group styling in dark mode */
-[data-theme="dark"] .form-group,
-[data-theme="dark"] form,
-[data-theme="dark"] .configuration-panel {
+  /* Form group styling in dark mode */
+  [data-theme="dark"] .form-group,
+  [data-theme="dark"] form,
+  [data-theme="dark"] .configuration-panel {
     background-color: var(--form-bg);
     color: var(--text-color);
-}
+  }
 
-/* Form Groups */
-.form-group {
+  /* Form Groups */
+  .form-group {
     margin-bottom: 1rem;
-}
+  }
 
-.form-group label {
+  .form-group label {
     margin-top: 0;
     margin-bottom: 0.5rem;
-}
+  }
 
-/* Preset List */
-.preset-list {
+  /* Preset List */
+  .preset-list {
     display: grid;
     gap: 0.5rem;
     margin: 1rem 0;
-}
+  }
 
-.preset-item {
+  .preset-item {
     background: var(--card-bg);
     border: 1px solid var(--border-color);
     border-radius: 0.25rem;
@@ -380,59 +395,60 @@ input[type="checkbox"] {
     justify-content: space-between;
     align-items: center;
     transition: all 0.3s ease;
-}
+  }
 
-.preset-item:hover {
+  .preset-item:hover {
     border-color: var(--btn-primary);
     box-shadow: 0 2px 4px var(--card-shadow);
-}
+  }
 
-/* Responsive Design */
-@media (max-width: 768px) {
+  /* Responsive Design */
+  @media (max-width: 768px) {
     .timer-display h1 {
-        font-size: 3rem;
+      font-size: 3rem;
     }
-    
+
     .timer-display h2 {
-        font-size: 1.2rem;
+      font-size: 1.2rem;
     }
-    
+
     .theme-toggle {
-        top: 0.5rem;
-        right: 0.5rem;
-        width: 40px;
-        height: 40px;
-        font-size: 1.2rem;
+      top: 0.5rem;
+      right: 0.5rem;
+      width: 40px;
+      height: 40px;
+      font-size: 1.2rem;
     }
-    
+
     main {
-        padding: 0.5rem;
+      padding: 0.5rem;
     }
-    
+
     button {
-        padding: 0.5rem 1rem;
-        font-size: 0.9rem;
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
     }
-}
+  }
 
-/* Animation for theme transitions */
-* {
-    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
-}
+  /* Animation for theme transitions */
+  * {
+    transition: background-color 0.3s ease, color 0.3s ease,
+      border-color 0.3s ease;
+  }
 
-/* Status indicator for timer mode */
-.mode-indicator {
+  /* Status indicator for timer mode */
+  .mode-indicator {
     display: inline-block;
     width: 12px;
     height: 12px;
     border-radius: 50%;
     margin-right: 0.5rem;
-}
+  }
 
-.mode-indicator.work {
-    background-color: var(--work-primary);
-}
+  .mode-indicator.work {
+    background: linear-gradient(135deg, var(--work-primary), var(--work-secondary));
+  }
 
-.mode-indicator.break {
-    background-color: var(--break-primary);
-}
+  .mode-indicator.break {
+    background: linear-gradient(135deg, var(--break-primary), var(--break-secondary));
+  }

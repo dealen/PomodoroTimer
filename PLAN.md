@@ -105,7 +105,7 @@ TimerService:
 
 Data types:
 - PomodoroConfig
-  - string Name
+  - string Name   
   - TimeSpan Work
   - TimeSpan Break
   - TimeSpan? LongBreak

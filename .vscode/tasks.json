@@ -421,6 +421,268 @@
 			"type": "shell",
 			"command": "git add . && git push",
 			"group": "build"
+		},
+		{
+			"label": "Run Pomodoro Timer",
+			"type": "shell",
+			"command": "dotnet run",
+			"isBackground": true,
+			"group": "build"
+		},
+		{
+			"label": "Stop dotnet processes",
+			"type": "shell",
+			"command": "pkill -f dotnet || true",
+			"group": "build"
+		},
+		{
+			"label": "Clean and rebuild",
+			"type": "shell",
+			"command": "dotnet clean && dotnet build",
+			"group": "build"
+		},
+		{
+			"label": "Run on port 5002",
+			"type": "shell",
+			"command": "dotnet run --urls=http://localhost:5002",
+			"isBackground": true,
+			"group": "build"
+		},
+		{
+			"label": "Commit workflow fix",
+			"type": "shell",
+			"command": "git add .github/workflows/deploy.yml && git commit -m \"fix: Update workflow to deploy from CI-CD_For_Github_Pages branch\"",
+			"group": "build"
+		},
+		{
+			"label": "Push workflow fix",
+			"type": "shell",
+			"command": "git push",
+			"group": "build"
+		},
+		{
+			"label": "Build with updated dark mode",
+			"type": "shell",
+			"command": "dotnet build",
+			"group": "build"
+		},
+		{
+			"label": "Commit dark mode improvements",
+			"type": "shell",
+			"command": "git add wwwroot/css/app.css && git commit -m \"feat: Enhance dark mode styling\n\n- Forms now have dark gray/black background in dark mode\n- Text boxes have darker gray background with white text\n- All text is white in dark mode (except break time with green bg)\n- Improved contrast and readability\n- Added specific variables for form and input styling\n- Enhanced dark mode visual hierarchy\"",
+			"group": "build"
+		},
+		{
+			"label": "Push dark mode improvements",
+			"type": "shell",
+			"command": "git push",
+			"group": "build"
+		},
+		{
+			"label": "Stop all dotnet processes",
+			"type": "shell",
+			"command": "pkill -f dotnet || true",
+			"group": "build"
+		},
+		{
+			"label": "Complete clean",
+			"type": "shell",
+			"command": "rm -rf bin/ obj/ dist/ test-dist/ && dotnet clean",
+			"group": "build"
+		},
+		{
+			"label": "Fresh build and run",
+			"type": "shell",
+			"command": "dotnet build && dotnet run --urls=http://localhost:5002",
+			"isBackground": true,
+			"group": "build"
+		},
+		{
+			"label": "Check running dotnet processes",
+			"type": "shell",
+			"command": "ps aux | grep dotnet",
+			"group": "build"
+		},
+		{
+			"label": "Check if app is responding",
+			"type": "shell",
+			"command": "curl -I http://localhost:5002",
+			"group": "test"
+		},
+		{
+			"label": "Stop dotnet processes",
+			"type": "shell",
+			"command": "pkill -f dotnet || true",
+			"group": "build"
+		},
+		{
+			"label": "Clean build artifacts",
+			"type": "shell",
+			"command": "rm -rf bin/ obj/ && dotnet clean",
+			"group": "build"
+		},
+		{
+			"label": "Build and run on port 5002",
+			"type": "shell",
+			"command": "dotnet build && dotnet run --urls=http://localhost:5002",
+			"isBackground": true,
+			"group": "build"
+		},
+		{
+			"label": "Find files in built wwwroot",
+			"type": "shell",
+			"command": "find bin/Debug/net9.0/wwwroot -type f",
+			"group": "debug"
+		},
+		{
+			"label": "Find files in root wwwroot",
+			"type": "shell",
+			"command": "find bin/Debug/net9.0/wwwroot -maxdepth 1 -type f",
+			"group": "debug"
+		},
+		{
+			"label": "Copy static files to build output",
+			"type": "shell",
+			"command": "cp -r wwwroot/* bin/Debug/net9.0/wwwroot/",
+			"group": "build"
+		},
+		{
+			"label": "Check copied static files",
+			"type": "shell",
+			"command": "find bin/Debug/net9.0/wwwroot -maxdepth 1 -type f",
+			"group": "debug"
+		},
+		{
+			"label": "Check CSS folder",
+			"type": "shell",
+			"command": "ls -la bin/Debug/net9.0/wwwroot/css/",
+			"group": "debug"
+		},
+		{
+			"label": "Test CSS accessibility",
+			"type": "shell",
+			"command": "curl -I http://localhost:5002/css/app.css",
+			"group": "test"
+		},
+		{
+			"label": "Test main page",
+			"type": "shell",
+			"command": "curl http://localhost:5002 | head -50",
+			"group": "test"
+		},
+		{
+			"label": "Copy fixed CSS",
+			"type": "shell",
+			"command": "cp wwwroot/css/app.css bin/Debug/net9.0/wwwroot/css/",
+			"group": "build"
+		},
+		{
+			"label": "Test CSS loads",
+			"type": "shell",
+			"command": "curl -I http://localhost:5002/css/app.css",
+			"group": "test"
+		},
+		{
+			"label": "Check dotnet process",
+			"type": "shell",
+			"command": "ps aux | grep dotnet",
+			"group": "debug"
+		},
+		{
+			"label": "Start Blazor app",
+			"type": "shell",
+			"command": "dotnet run",
+			"isBackground": true,
+			"group": "build"
+		},
+		{
+			"label": "Test app on port 5000",
+			"type": "shell",
+			"command": "curl -I http://localhost:5000",
+			"group": "test"
+		},
+		{
+			"label": "Test CSS on port 5000",
+			"type": "shell",
+			"command": "curl -I http://localhost:5000/css/app.css",
+			"group": "test"
+		},
+		{
+			"label": "Test Blazor framework",
+			"type": "shell",
+			"command": "curl -I http://localhost:5000/_framework/blazor.webassembly.js",
+			"group": "test"
+		},
+		{
+			"label": "Check page content",
+			"type": "shell",
+			"command": "curl http://localhost:5000 | head -30",
+			"group": "test"
+		},
+		{
+			"label": "Check Blazor boot",
+			"type": "shell",
+			"command": "curl -s http://localhost:5000/_framework/blazor.boot.json | head -20",
+			"group": "test"
+		},
+		{
+			"label": "Check main assembly",
+			"type": "shell",
+			"command": "curl -I http://localhost:5000/_framework/PomodoroTimer.vw8b7w3nz1.wasm",
+			"group": "test"
+		},
+		{
+			"label": "Check wwwroot contents",
+			"type": "shell",
+			"command": "ls -la wwwroot/",
+			"group": "debug"
+		},
+		{
+			"label": "Check dotnet process",
+			"type": "shell",
+			"command": "ps aux | grep 'dotnet run' | grep -v grep",
+			"group": "debug"
+		},
+		{
+			"label": "Check port 5000",
+			"type": "shell",
+			"command": "netstat -tlnp | grep :5000",
+			"group": "debug"
+		},
+		{
+			"label": "Check listening ports",
+			"type": "shell",
+			"command": "ss -tlnp | grep dotnet",
+			"group": "debug"
+		},
+		{
+			"label": "Stop server",
+			"type": "shell",
+			"command": "pkill -f 'dotnet run'",
+			"group": "build"
+		},
+		{
+			"label": "Restart Blazor app",
+			"type": "shell",
+			"command": "dotnet run",
+			"isBackground": true,
+			"group": "build"
+		},
+		{
+			"label": "Test updated app",
+			"type": "shell",
+			"command": "curl -I http://localhost:5000",
+			"group": "test"
+		},
+		{
+			"label": "Run Pomodoro Timer",
+			"type": "shell",
+			"command": "dotnet run",
+			"isBackground": true,
+			"problemMatcher": [
+				"$msCompile"
+			],
+			"group": "build"
 		}
 	]
 }
