@@ -30,12 +30,12 @@
 
 /* Dark Theme Colors */
 [data-theme="dark"] {
-    --bg-color: #121212;
-    --text-color: #ffffff;
-    --sidebar-bg: #1e1e1e;
-    --border-color: #333333;
-    --card-bg: #1e1e1e;
-    --card-shadow: rgba(0, 0, 0, 0.5);
+    --bg-color: #1a1a1a;
+    --text-color: #e0e0e0;
+    --sidebar-bg: #2d2d2d;
+    --border-color: #404040;
+    --card-bg: #2d2d2d;
+    --card-shadow: rgba(0, 0, 0, 0.3);
     
     /* Work Timer Colors (Blue - adjusted for dark) */
     --work-primary: #7c3aed;
@@ -178,12 +178,11 @@ button {
     color: white;
     border: none;
     padding: 0.75rem 1.5rem;
-    margin: 0.5rem 0.25rem;
+    margin: 0.25rem;
     border-radius: 0.5rem;
     cursor: pointer;
     font-size: 1rem;
     font-weight: 500;
-    font-family: inherit;
     transition: all 0.3s ease;
     box-shadow: 0 2px 4px var(--card-shadow);
 }
@@ -225,19 +224,17 @@ button:disabled {
 /* Configuration Panel */
 .config-panel {
     background: var(--card-bg);
-    border: 2px solid var(--border-color);
-    border-radius: 1rem;
-    padding: 1.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    padding: 1rem;
     margin: 1rem 0;
-    box-shadow: 0 4px 12px var(--card-shadow);
+    box-shadow: 0 2px 8px var(--card-shadow);
     transition: all 0.3s ease;
 }
 
 .config-panel h3 {
     margin-top: 0;
-    margin-bottom: 1.5rem;
     color: var(--text-color);
-    font-size: 1.25rem;
 }
 
 /* Input Fields */
@@ -247,14 +244,9 @@ select {
     background-color: var(--card-bg);
     color: var(--text-color);
     border: 2px solid var(--border-color);
-    padding: 0.75rem;
-    border-radius: 0.5rem;
-    margin: 0.5rem 0;
-    width: 100%;
-    max-width: 200px;
-    font-size: 1rem;
-    font-family: inherit;
-    box-sizing: border-box;
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    margin: 0.25rem;
     transition: all 0.3s ease;
 }
 
@@ -264,38 +256,13 @@ select:focus {
     outline: none;
     border-color: var(--btn-primary);
     box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
-    transform: translateY(-1px);
 }
 
 /* Labels */
 label {
     color: var(--text-color);
     font-weight: 500;
-    font-size: 1rem;
-    margin-bottom: 0.5rem;
-    display: block;
-    margin-top: 1rem;
-}
-
-label:first-child {
-    margin-top: 0;
-}
-
-/* Checkboxes */
-input[type="checkbox"] {
     margin-right: 0.5rem;
-    transform: scale(1.2);
-    accent-color: var(--btn-primary);
-}
-
-/* Form Groups */
-.form-group {
-    margin-bottom: 1rem;
-}
-
-.form-group label {
-    margin-top: 0;
-    margin-bottom: 0.5rem;
 }
 
 /* Preset List */

@@ -366,6 +366,43 @@
 			"type": "shell",
 			"command": "git add .",
 			"group": "build"
+		},
+		{
+			"label": "Commit loading fixes",
+			"type": "shell",
+			"command": "git commit -m \"fix: Resolve app loading issues and path configuration\n\n- Fix base href for local development (changed from /PomodoroTimer/ to /)\n- Add 'unsafe-inline' to CSP script-src to allow inline JavaScript\n- Update service worker registration path for local development\n- Remove X-Frame-Options meta tag (can only be set via HTTP headers)\n- Add GitHub Actions step to update base href for production deployment\n- Fix deprecated apple-mobile-web-app-capable meta tag\n\nResolves console errors:\n- 404 errors for CSS, JS, and manifest files\n- CSP violations for inline scripts\n- X-Frame-Options meta tag warnings\"",
+			"group": "build"
+		},
+		{
+			"label": "Push loading fixes",
+			"type": "shell",
+			"command": "git push origin CI-CD_For_Github_Pages",
+			"group": "build"
+		},
+		{
+			"label": "Test production build with fixes",
+			"type": "shell",
+			"command": "dotnet publish -c Release -o test-dist/",
+			"group": "build"
+		},
+		{
+			"label": "Build with styling fixes",
+			"type": "shell",
+			"command": "dotnet build",
+			"group": "build"
+		},
+		{
+			"label": "Restart with styling fixes",
+			"type": "shell",
+			"command": "lsof -ti:5002 | xargs kill -9 || true && sleep 1 && dotnet run --urls http://localhost:5002",
+			"isBackground": true,
+			"group": "run"
+		},
+		{
+			"label": "Commit styling improvements",
+			"type": "shell",
+			"command": "git add . && git commit -m \"feat: Improve form styling and dark mode appearance\n\n- Fix input field styling to fit within form borders\n- Increase font size to 1rem for better readability\n- Improve dark mode colors (darker backgrounds, white text)\n- Enhanced form layout with proper spacing and padding\n- Better button and checkbox styling\n- Improved configuration panel design with rounded corners\n- Added form-group styling for better organization\n- Enhanced focus states with subtle animations\n\nResolves:\n- Input fields appearing outside form borders\n- Small font sizes in form fields\n- Dark mode not being dark enough\n- Text not being white in dark mode\"",
+			"group": "build"
 		}
 	]
 }
