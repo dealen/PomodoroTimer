@@ -203,6 +203,49 @@
 			"type": "shell",
 			"command": "git add . && git commit -m \"security: Add comprehensive security policy and hardening\n\n- Create detailed SECURITY.md with risk assessment and mitigation plans\n- Add Content Security Policy headers to index.html\n- Implement additional security headers (X-Frame-Options, etc.)\n- Create security.txt for responsible disclosure\n- Document security best practices and monitoring\"",
 			"group": "build"
+		},
+		{
+			"label": "Build with theme changes",
+			"type": "shell",
+			"command": "dotnet build",
+			"group": "build"
+		},
+		{
+			"label": "Clean and rebuild",
+			"type": "shell",
+			"command": "dotnet clean && dotnet build",
+			"group": "build"
+		},
+		{
+			"label": "Full clean rebuild",
+			"type": "shell",
+			"command": "rm -rf obj bin && dotnet build",
+			"group": "build"
+		},
+		{
+			"label": "Build with GenerateAssemblyInfo=false",
+			"type": "shell",
+			"command": "rm -rf obj bin && dotnet build",
+			"group": "build"
+		},
+		{
+			"label": "Build after CSS fix",
+			"type": "shell",
+			"command": "dotnet build",
+			"group": "build"
+		},
+		{
+			"label": "Run app to test theme system",
+			"type": "shell",
+			"command": "dotnet watch run",
+			"isBackground": true,
+			"group": "run"
+		},
+		{
+			"label": "Stage theme system changes",
+			"type": "shell",
+			"command": "git add .",
+			"group": "build"
 		}
 	]
 }
