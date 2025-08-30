@@ -1,9 +1,0 @@
-Contact: https://github.com/dealen/PomodoroTimer/issues
-Preferred-Languages: en
-Policy: https://github.com/dealen/PomodoroTimer/blob/main/SECURITY.md
-Canonical: https://dealen.github.io/PomodoroTimer/.well-known/security.txt
-
-# Security information for Pomodoro Timer
-# This is a client-side only Blazor WebAssembly application
-# No backend servers or databases are involved
-# All data is stored locally in the user's browser

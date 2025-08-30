@@ -403,6 +403,24 @@
 			"type": "shell",
 			"command": "git add . && git commit -m \"feat: Improve form styling and dark mode appearance\n\n- Fix input field styling to fit within form borders\n- Increase font size to 1rem for better readability\n- Improve dark mode colors (darker backgrounds, white text)\n- Enhanced form layout with proper spacing and padding\n- Better button and checkbox styling\n- Improved configuration panel design with rounded corners\n- Added form-group styling for better organization\n- Enhanced focus states with subtle animations\n\nResolves:\n- Input fields appearing outside form borders\n- Small font sizes in form fields\n- Dark mode not being dark enough\n- Text not being white in dark mode\"",
 			"group": "build"
+		},
+		{
+			"label": "Fix commit and remove test-dist",
+			"type": "shell",
+			"command": "git reset HEAD test-dist/ && git add .gitignore wwwroot/css/app.css && git commit --amend -m \"feat: Improve form styling and dark mode appearance\n\n- Fix input field styling to fit within form borders\n- Increase font size to 1rem for better readability\n- Improve dark mode colors (darker backgrounds, white text)\n- Enhanced form layout with proper spacing and padding\n- Better button and checkbox styling\n- Improved configuration panel design with rounded corners\n- Added form-group styling for better organization\n- Enhanced focus states with subtle animations\n- Add test-dist/ to .gitignore\n\nResolves:\n- Input fields appearing outside form borders\n- Small font sizes in form fields\n- Dark mode not being dark enough\n- Text not being white in dark mode\"",
+			"group": "build"
+		},
+		{
+			"label": "Simple commit for styling",
+			"type": "shell",
+			"command": "rm -rf test-dist/ && git add .gitignore && git commit -m \"feat: Improve form styling and dark mode\n\n- Fix input field styling to fit within form borders\n- Increase font size to 1rem for better readability\n- Make dark mode darker with white text\n- Enhanced form layout and styling\n- Add test-dist/ to .gitignore\"",
+			"group": "build"
+		},
+		{
+			"label": "Push styling improvements",
+			"type": "shell",
+			"command": "git add . && git push",
+			"group": "build"
 		}
 	]
 }
